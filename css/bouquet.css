@@ -1034,6 +1034,19 @@ html[lang="en"] .co-head h1 { font-weight: 300; font-style: italic; }
 .pay-opt small { font-size: 13px; color: var(--ink-muted); }
 .pay-opt:has(input:checked) { border-color: var(--burgundy); background: rgba(125, 22, 42, .04); }
 .pay-opt.is-disabled { opacity: .5; cursor: not-allowed; }
+/* التحويل على محفظة */
+.wallet { margin-top: 14px; padding: 20px 22px; background: var(--ivory-2); border: 1px solid rgba(198, 161, 91, .45); }
+.wallet__how { margin: 0 0 16px; font-size: 13.5px; line-height: 1.85; color: var(--ink-soft); }
+.wallet__list { list-style: none; padding: 0; margin: 0 0 18px; display: grid; gap: 8px; }
+.wallet__list li { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 11px 14px; background: var(--white); border: 1px solid var(--line); }
+.wallet__label { font-size: 13.5px; color: var(--ink-soft); min-width: 92px; }
+.wallet__num { flex: 1; min-width: 130px; font: 500 1.05rem/1 var(--f-body); letter-spacing: .06em; color: var(--burgundy); font-variant-numeric: lining-nums; }
+.wallet__copy { flex: none; padding: 7px 14px; border: 1px solid var(--line-2); font-size: 12.5px; color: var(--ink-soft); transition: all .4s var(--ease); }
+.wallet__copy:hover { border-color: var(--burgundy); color: var(--burgundy); }
+.wallet__copy.is-done { background: var(--burgundy); border-color: var(--burgundy); color: var(--ivory); }
+.wallet .field { margin-top: 4px; }
+.co-done__hint { min-height: 1.5em; margin: 4px 0 0; font-size: 13.5px; color: var(--burgundy); }
+
 .co-note { display: flex; gap: 10px; align-items: flex-start; margin: 14px 0 0; font-size: 13px; color: var(--ink-muted); line-height: 1.7; }
 .co-note .ic { width: 18px; height: 18px; flex: none; margin-top: 3px; color: var(--burgundy); }
 .co-err { margin: 12px 0 0; font-size: 14px; color: var(--danger); min-height: 1.4em; }

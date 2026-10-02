@@ -1,9 +1,11 @@
 /* =====================================================================
    بوكيه — إتمام الطلب  |  Bouquet — checkout
    ---------------------------------------------------------------------
-   لا يوجد نظام دفع إلكتروني حاليًا: يُسجَّل الطلب على الجهاز ويُرسل إلى
-   واتساب المتجر (BQ_CONFIG.whatsapp) لتأكيده. عند ربط بوابة دفع
-   (مثل Paymob أو Fawry) يُستبدل الجزء الموجود داخل placeOrder().
+   الطلب يُسجَّل في ثلاثة أماكن حتى لا يضيع أبدًا:
+     1) على جهاز العميلة (صفحة «حسابي»)
+     2) في Google Sheet عبر js/orders-api.js  ← لوحة التحكم تقرأ منه
+     3) رسالة واتساب جاهزة ترسلها العميلة إلى رقم المتجر
+   طرق الدفع: الدفع عند الاستلام + تحويل على محفظة/إنستاباي.
    ===================================================================== */
 (function () {
   'use strict';
@@ -14,15 +16,24 @@
   const t = (k, v) => BQ.i18n.t(k, v);
   const L = (o) => BQ.i18n.L(o);
   const root = $('#coRoot');
-  let view = 'form'; let lastOrder = null;
+  let view = 'form'; let lastOrder = null; let busy = false;
 
-  const FIELDS = ['name', 'phone', 'email', 'gov', 'city', 'street', 'notes'];
+  const FIELDS = ['name', 'phone', 'email', 'gov', 'city', 'street', 'notes', 'ref'];
   let values = Object.assign({}, store.profile());
+
+  // طرق الدفع المتاحة فعلًا حسب الإعدادات
+  const pay = cfg.payment || {};
+  const wallets = ((pay.wallet && pay.wallet.accounts) || []).filter((a) => a && String(a.value || '').trim());
+  const walletOn = !!(pay.wallet && pay.wallet.enabled) && wallets.length > 0;
+  const codOn = pay.cod !== false;
+  const methods = [codOn && 'cod', walletOn && 'wallet'].filter(Boolean);
+  let method = methods[0] || 'cod';
 
   function readValues() {
     const f = $('#coForm'); if (!f) return;
     FIELDS.forEach((k) => { if (f.elements[k]) values[k] = f.elements[k].value; });
     values.save = f.elements.save ? f.elements.save.checked : values.save;
+    if (f.elements.pay) method = f.elements.pay.value;
   }
 
   const field = (k, label, type = 'text', extra = '') => `
@@ -58,6 +69,31 @@
   function head(titleKey) {
     return `<div class="co-head"><div><p class="eyebrow" lang="en">BOUQUET — CHECKOUT</p><h1>${t(titleKey)}</h1></div>
       <a class="link-u" href="index.html#discover"><span>${t('cart.continue')}</span>${I.arrow}</a></div>`;
+  }
+
+  function payHTML() {
+    const opt = (val, title, hint) => `
+      <label class="pay-opt"><input type="radio" name="pay" value="${val}"${method === val ? ' checked' : ''}>
+        <span><strong>${title}</strong><small>${hint}</small></span></label>`;
+    const walletBox = `
+      <div class="wallet" id="walletBox"${method === 'wallet' ? '' : ' hidden'}>
+        <p class="wallet__how">${t('co.walletHow')}</p>
+        <ul class="wallet__list">${wallets.map((a) => `
+          <li>
+            <span class="wallet__label">${esc(L({ ar: a.label, en: a.labelEn || a.label }))}</span>
+            <span class="wallet__num" dir="ltr">${esc(a.value)}</span>
+            <button class="wallet__copy" type="button" data-copy="${esc(a.value)}">${t('co.copy')}</button>
+          </li>`).join('')}
+        </ul>
+        ${field('ref', t('co.ref'), 'text', `inputmode="numeric" dir="ltr" placeholder="${esc(t('co.refPh'))}"`)}
+      </div>`;
+    return `
+      <div class="pay">
+        ${codOn ? opt('cod', t('co.cod'), t('co.codHint')) : ''}
+        ${walletOn ? opt('wallet', t('co.wallet'), t('co.walletHint')) : ''}
+      </div>
+      ${walletOn ? walletBox : ''}
+      <p class="co-note">${I.check}<span>${t('co.secure')}</span></p>`;
   }
 
   function render() {
@@ -96,15 +132,11 @@
           </fieldset>
           <fieldset>
             <legend><span lang="en">03</span>${t('co.payment')}</legend>
-            <div class="pay">
-              <label class="pay-opt"><input type="radio" name="pay" value="cod" checked><span><strong>${t('co.cod')}</strong><small>${t('co.codHint')}</small></span></label>
-              <label class="pay-opt is-disabled" data-ph><input type="radio" name="pay" value="card" disabled><span><strong>${t('co.card')}</strong><small>${t('co.cardHint')}</small></span></label>
-            </div>
-            <p class="co-note">${I.check}<span>${t('co.secure')}</span></p>
+            ${payHTML()}
           </fieldset>
           <label class="check"><input type="checkbox" name="save"${values.save !== false ? ' checked' : ''}><span>${t('co.save')}</span></label>
           <div style="margin-top:28px">
-            <button class="btn btn--primary btn--block" type="submit">${I.whatsapp}<span>${t('co.place')}</span></button>
+            <button class="btn btn--primary btn--block" type="submit" id="placeBtn">${I.whatsapp}<span>${t('co.place')}</span></button>
             <p class="co-note">${t('co.placeNote')}</p>
             <p class="co-err" id="coErr" role="alert"></p>
           </div>
@@ -113,6 +145,30 @@
       </div>`;
     $('#coForm').addEventListener('submit', placeOrder);
     $$('#coForm input, #coForm select').forEach((el) => el.addEventListener('input', () => clearErr(el.name)));
+    $$('#coForm input[name="pay"]').forEach((r) => r.addEventListener('change', () => {
+      method = r.value;
+      const box = $('#walletBox'); if (box) box.hidden = method !== 'wallet';
+    }));
+    root.addEventListener('click', onCopy);
+  }
+
+  function onCopy(e) {
+    const b = e.target.closest('[data-copy]'); if (!b) return;
+    copyText(b.dataset.copy);
+    const old = b.textContent; b.textContent = t('co.copied'); b.classList.add('is-done');
+    setTimeout(() => { b.textContent = old; b.classList.remove('is-done'); }, 1800);
+  }
+
+  function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+    return Promise.resolve(fallbackCopy(text));
+  }
+  function fallbackCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;top:-1000px';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
   }
 
   function renderSummaryOnly() {
@@ -149,9 +205,10 @@
     return `BQ-${String(d.getFullYear()).slice(2)}${pad(d.getMonth() + 1)}${pad(d.getDate())}-${Math.floor(1000 + Math.random() * 9000)}`;
   }
 
-  function waMessage(o) {
+  const payLabel = (m) => t(m === 'wallet' ? 'co.wallet' : 'co.cod');
+
+  function orderText(o) {
     const lines = o.items.map((i) => `• ${i.name} (${i.latin}) — ${i.ml} ${t('ml')} × ${i.qty}${cfg.showPrices ? ` = ${money(i.price * i.qty)}` : ''}`);
-    const pay = t(o.payment === 'cod' ? 'co.cod' : 'co.card');
     const c = o.customer;
     return [
       t('wa.greeting'),
@@ -166,29 +223,48 @@
       `${t('co.name')}: ${c.name}`,
       `${t('co.phone')}: ${c.phone}`,
       c.email ? `${t('co.email')}: ${c.email}` : '',
-      `${t('co.address')}: ${govName(c.gov)} — ${c.city} — ${c.street}`,
-      `${t('wa.payment')}: ${pay}`,
+      `${t('co.address')}: ${c.govName} — ${c.city} — ${c.street}`,
+      `${t('wa.payment')}: ${o.paymentLabel}`,
+      o.ref ? `${t('wa.ref')}: ${o.ref}` : '',
       c.notes ? `${t('wa.notes')}: ${c.notes}` : '',
     ].filter((x, i, a) => x !== '' || (a[i - 1] !== '' && i > 0)).join('\n');
   }
-  const waLink = (o) => `https://wa.me/${cfg.whatsapp}?text=${encodeURIComponent(waMessage(o))}`;
+  const waLink = (o) => `https://wa.me/${cfg.whatsapp}?text=${encodeURIComponent(orderText(o))}`;
 
-  function placeOrder(e) {
+  async function placeOrder(e) {
     e.preventDefault();
-    if (!validate()) return;
+    if (busy || !validate()) return;
     const f = $('#coForm');
-    const customer = { name: values.name.trim(), phone: values.phone.trim(), email: (values.email || '').trim(), gov: values.gov, city: values.city.trim(), street: values.street.trim(), notes: (values.notes || '').trim() };
+    const btn = $('#placeBtn');
+    busy = true;
+    btn.disabled = true;
+    btn.querySelector('span').textContent = t('co.sending');
+
+    const customer = {
+      name: values.name.trim(), phone: values.phone.trim(), email: (values.email || '').trim(),
+      gov: values.gov, govName: govName(values.gov),
+      city: values.city.trim(), street: values.street.trim(), notes: (values.notes || '').trim(),
+    };
     const items = store.cart().map((l) => ({ id: l.id, name: L(l.product.name), latin: l.product.latin, ml: l.ml, qty: l.qty, price: l.price, image: l.product.images[0] }));
-    const order = { id: orderId(), date: new Date().toISOString(), items, subtotal: store.cartSubtotal(), payment: f.elements.pay.value, customer, status: 'pending' };
+    const order = {
+      id: orderId(), date: new Date().toISOString(), items,
+      subtotal: store.cartSubtotal(), currency: cfg.currency.ar,
+      payment: method, paymentLabel: payLabel(method),
+      ref: method === 'wallet' ? String(values.ref || '').trim() : '',
+      customer, status: 'new', lang: BQ.i18n.lang,
+    };
 
     store.addOrder(order);
     if (f.elements.save.checked) store.saveProfile({ ...customer, notes: '', save: true });
 
-    // PLACEHOLDER: عند ربط نظام متجر/دفع حقيقي، أرسلي الطلب إلى الخادم هنا بدلًا من واتساب.
+    // التسجيل في Google Sheet (لا يعطّل العميلة لو فشل — الطلب محفوظ ويعاد إرساله لاحقًا)
+    const sent = await BQ.api.submitOrder(order);
+
     const link = waLink(order);
     const w = window.open(link, '_blank', 'noopener');
-    lastOrder = { order, link, opened: !!w };
+    lastOrder = { order, link, opened: !!w, sent: sent.ok };
     store.clearCart();
+    busy = false;
     view = 'done';
     renderDone();
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -196,6 +272,7 @@
 
   function renderDone() {
     const o = lastOrder.order;
+    const page = String(cfg.messenger || '').trim();
     root.innerHTML = `<div class="co-done" data-reveal>
       <svg class="lineart" data-draw viewBox="-6 -6 669 526" aria-hidden="true" focusable="false"><use href="#bq-line"/></svg>
       <p class="eyebrow" lang="en">MERCI</p>
@@ -204,9 +281,25 @@
       <p>${t('co.thanksText', { id: o.id })}</p>
       <div class="co-done__actions">
         <a class="btn btn--primary" href="${lastOrder.link}" target="_blank" rel="noopener">${I.whatsapp}<span>${t('co.resend')}</span></a>
-        <a class="btn btn--line" href="index.html"><span>${t('co.backHome')}</span></a>
+        ${page ? `<button class="btn btn--line" type="button" id="msgrBtn">${I.messenger}<span>${t('co.msgr')}</span></button>` : ''}
+        <button class="btn btn--line" type="button" id="copyBtn"><span>${t('co.copyOrder')}</span></button>
       </div>
+      <p class="co-done__hint" id="doneHint" role="status" aria-live="polite"></p>
+      <a class="link-u" href="index.html"><span>${t('co.backHome')}</span></a>
     </div>`;
+
+    const text = orderText(o);
+    const copyBtn = $('#copyBtn');
+    copyBtn.addEventListener('click', () => {
+      copyText(text);
+      $('#doneHint').textContent = t('co.copied');
+    });
+    const mb = $('#msgrBtn');
+    if (mb) mb.addEventListener('click', () => {
+      copyText(text);
+      $('#doneHint').textContent = t('co.msgrHint');
+      setTimeout(() => window.open(`https://m.me/${encodeURIComponent(page)}`, '_blank', 'noopener'), 350);
+    });
     BQ.motion.refresh(root);
   }
 
