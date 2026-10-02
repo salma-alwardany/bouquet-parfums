@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "bouquet",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "5733"],
+      "port": 5733,
+      "autoPort": false
+    }
+  ]
+}

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بوكيه | عطور تركية أصلية — لمسة عطرية وأثر يدوم</title>
+  <meta name="description" content="بوكيه لبيع العطور التركية الأصلية والمعتّقة والعود الشرقي والمسك. عطور نسائية ورجالية بأحجام ومقاييس متعددة. لمسة عطرية وأثر يدوم.">
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+
+  <!-- خطوط عربية أنيقة -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;500;600;700&family=Tajawal:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/styles.css?v=3">
+</head>
+<body>
+
+  <!-- شريط إعلاني علوي -->
+  <div class="announce">
+    <span>عطور تركية أصلية 💯</span>
+    <span class="dot">•</span>
+    <span>تشكيلة معتّقة فاخرة</span>
+    <span class="dot">•</span>
+    <span>أحجام ومقاييس متعددة</span>
+  </div>
+
+  <!-- الهيدر -->
+  <header class="header" id="header">
+    <div class="container header-inner">
+      <a href="#hero" class="brand">
+        <img src="assets/logo.png" alt="بوكيه" class="brand-logo"
+             onerror="this.onerror=null;this.src='assets/logo.svg'">
+        <span class="brand-text">
+          <span class="brand-ar">بوكيه</span>
+          <span class="brand-en">bouquet</span>
+        </span>
+      </a>
+
+      <nav class="nav" id="nav"><!-- روابط الفئات تُبنى تلقائيًا --></nav>
+
+      <div class="header-actions">
+        <button class="icon-btn cart-btn" id="cartBtn" aria-label="سلة المشتريات">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span class="cart-count" id="cartCount">0</span>
+        </button>
+        <button class="icon-btn menu-toggle" id="menuToggle" aria-label="القائمة">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- الواجهة -->
+  <section class="hero" id="hero">
+    <div class="hero-petals" aria-hidden="true"></div>
+    <div class="container hero-inner">
+      <img src="assets/logo.png" alt="بوكيه" class="hero-logo"
+           onerror="this.onerror=null;this.src='assets/logo.svg'">
+      <h1 class="hero-title">بوكيه</h1>
+      <p class="hero-tag">لمسة عطرية… وأثر يدوم</p>
+      <p class="hero-sub">عطور تركية أصلية ومعتّقة • عود شرقي • مسك • عطور أسبانية — بأحجام ومقاييس تناسب الجميع</p>
+      <div class="hero-cta">
+        <a href="#catalog" class="btn btn-primary">تسوّقي الآن</a>
+        <a href="#consult" class="btn btn-ghost">استشيري في اختيار عطرك</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- مزايا -->
+  <section class="features">
+    <div class="container features-grid">
+      <div class="feature"><span class="feature-ic">💯</span><h3>أصلية مضمونة</h3><p>عطور تركية أصلية منتقاة بعناية</p></div>
+      <div class="feature"><span class="feature-ic">🍶</span><h3>تشكيلة معتّقة</h3><p>روائح فاخرة بثبات يدوم طويلًا</p></div>
+      <div class="feature"><span class="feature-ic">🪶</span><h3>أحجام متعددة</h3><p>ربع ونصف وتولة كاملة • 10/20/25/50 مل</p></div>
+      <div class="feature"><span class="feature-ic">💬</span><h3>استشارة مجانية</h3><p>نساعدك في اختيار عطرك عبر واتساب</p></div>
+    </div>
+  </section>
+
+  <!-- شريط الفئات -->
+  <div class="catpills-wrap" id="catpillsWrap">
+    <div class="container catpills" id="catpills"></div>
+  </div>
+
+  <!-- الكتالوج -->
+  <main class="catalog" id="catalog">
+    <div class="container">
+      <div class="catalog-head">
+        <h2 class="section-title">تشكيلة العطور</h2>
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+          <input type="search" id="searchInput" placeholder="ابحثي عن عطر…" aria-label="بحث">
+        </div>
+      </div>
+      <div id="sections"><!-- الأقسام تُبنى تلقائيًا --></div>
+      <p class="no-results" id="noResults" hidden>لا توجد نتائج مطابقة لبحثك.</p>
+    </div>
+  </main>
+
+  <!-- قسم الأحجام -->
+  <section class="sizes" id="sizes">
+    <div class="container">
+      <h2 class="section-title center">الأحجام والمقاييس</h2>
+      <div class="sizes-grid">
+        <div class="size-card"><span class="size-ic">🫗</span><h3>المقاييس</h3><p>ربع تولة • نصف تولة • تولة كاملة</p></div>
+        <div class="size-card"><span class="size-ic">🧴</span><h3>الزجاجات</h3><p>10 مل • 20 مل • 25 مل • 50 مل</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- استشارة واتساب -->
+  <section class="consult" id="consult">
+    <div class="container consult-inner">
+      <h2>محتارة في اختيار عطرك؟</h2>
+      <p>راسلينا على واتساب وسنساعدك في اختيار العطر الأنسب لك أو كهدية، ونرشّح لك الأحجام المناسبة.</p>
+      <a class="btn btn-wa" id="consultWa" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 0 1-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 0 1 8.413 3.488 11.82 11.82 0 0 1 3.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 0 0 1.51 5.26l-.999 3.648 3.978-1.043z"/></svg>
+        استشيري عبر واتساب
+      </a>
+    </div>
+  </section>
+
+  <!-- الفوتر -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <img src="assets/logo.png" alt="بوكيه" class="footer-logo"
+             onerror="this.onerror=null;this.src='assets/logo.svg'">
+        <p class="footer-tag">لمسة عطرية وأثر يدوم</p>
+        <p class="footer-desc">عطور تركية أصلية ومعتّقة، عود شرقي، مسك، وعطور أسبانية. نوصّل لمستك العطرية أينما كنتِ.</p>
+      </div>
+      <div class="footer-col">
+        <h4>الفئات</h4>
+        <ul id="footerCats"></ul>
+      </div>
+      <div class="footer-col">
+        <h4>تواصلي معنا</h4>
+        <ul class="footer-contact">
+          <li><a id="footerWa" target="_blank" rel="noopener">واتساب: تواصل مباشر</a></li>
+          <li><a id="footerInsta" href="#" target="_blank" rel="noopener">إنستغرام</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <span>© <span id="year"></span> بوكيه — جميع الحقوق محفوظة</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- زر واتساب عائم -->
+  <a class="wa-float" id="waFloat" target="_blank" rel="noopener" aria-label="تواصل عبر واتساب">
+    <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 0 1-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 0 1 8.413 3.488 11.82 11.82 0 0 1 3.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 0 0 1.51 5.26l-.999 3.648 3.978-1.043zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+  </a>
+
+  <!-- خلفية معتمة -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- سلة المشتريات -->
+  <aside class="cart-drawer" id="cartDrawer" aria-label="سلة المشتريات">
+    <div class="cart-header">
+      <h3>سلة المشتريات</h3>
+      <button class="icon-btn" id="cartClose" aria-label="إغلاق">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="cart-body" id="cartBody"></div>
+    <div class="cart-empty" id="cartEmpty">
+      <span class="cart-empty-ic">🌸</span>
+      <p>سلتك فارغة</p>
+      <span>أضيفي عطورك المفضلة لتظهر هنا</span>
+    </div>
+    <div class="cart-footer" id="cartFooter">
+      <div class="cart-total">
+        <span>الإجمالي</span>
+        <strong id="cartTotal">—</strong>
+      </div>
+      <p class="cart-note" id="cartPriceNote" hidden>بعض الأسعار تُحدد عند تأكيد الطلب.</p>
+      <button class="btn btn-primary btn-block" id="checkoutBtn">إتمام الطلب عبر واتساب</button>
+      <button class="btn btn-wa btn-block" id="cartWaBtn">
+        إرسال القائمة مباشرة عبر واتساب
+      </button>
+    </div>
+  </aside>
+
+  <!-- نافذة إتمام الطلب -->
+  <div class="modal" id="checkoutModal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>إتمام الطلب</h3>
+        <button class="icon-btn" id="checkoutClose" aria-label="إغلاق">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <form class="checkout-form" id="checkoutForm">
+        <p class="modal-intro">أكملي بياناتك وسيصلنا طلبك على واتساب لإفادتك بالأسعار وتأكيد الطلب وترتيب التوصيل.</p>
+        <label>الاسم الكامل<input type="text" name="name" required placeholder="مثال: سارة أحمد"></label>
+        <label>رقم الهاتف / واتساب<input type="tel" name="phone" required placeholder="01XXXXXXXXX"></label>
+        <label>المدينة / المنطقة<input type="text" name="city" required placeholder="مثال: القاهرة — مدينة نصر"></label>
+        <label>العنوان بالتفصيل<input type="text" name="address" required placeholder="أقرب نقطة دالة"></label>
+        <label>ملاحظات (اختياري)<textarea name="notes" rows="2" placeholder="أي تفاصيل إضافية عن الطلب"></textarea></label>
+        <div class="checkout-summary" id="checkoutSummary"></div>
+        <button type="submit" class="btn btn-wa btn-block">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 0 1-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 0 1 8.413 3.488 11.82 11.82 0 0 1 3.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 0 0 1.51 5.26l-.999 3.648 3.978-1.043z"/></svg>
+          تأكيد الطلب عبر واتساب
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- تنبيه -->
+  <div class="toast" id="toast"></div>
+
+  <script src="js/products.js?v=4"></script>
+  <script src="js/app.js?v=4"></script>
+</body>
+</html>

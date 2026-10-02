@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="بوكيه Bouquet">
+  <defs>
+    <radialGradient id="ctr" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="70%" stop-color="#fff7f5"/>
+      <stop offset="100%" stop-color="#f3dadd"/>
+    </radialGradient>
+  </defs>
+  <!-- بتلات الزهرة متدرجة من الأحمر إلى الوردي الفاتح -->
+  <g>
+    <path d="M0,-46 C9,-32 14,-13 14,0 C14,13 9,32 0,46 C-9,32 -14,13 -14,0 C-14,-13 -9,-32 0,-46 Z" transform="rotate(-135 100 102) translate(100 56)" fill="#c8102e"/>
+    <path d="M0,-46 C9,-32 14,-13 14,0 C14,13 9,32 0,46 C-9,32 -14,13 -14,0 C-14,-13 -9,-32 0,-46 Z" transform="rotate(-90 100 102) translate(100 56)" fill="#b23a48"/>
+    <path d="M0,-46 C9,-32 14,-13 14,0 C14,13 9,32 0,46 C-9,32 -14,13 -14,0 C-14,-13 -9,-32 0,-46 Z" transform="rotate(-45 100 102) translate(100 56)" fill="#a86a72"/>
+    <path d="M0,-46 C9,-32 14,-13 14,0 C14,13 9,32 0,46 C-9,32 -14,13 -14,0 C-14,-13 -9,-32 0,-46 Z" transform="rotate(0 100 102) translate(100 56)" fill="#c98b92"/>
+    <path d="M0,-46 C9,-32 14,-13 14,0 C14,13 9,32 0,46 C-9,32 -14,13 -14,0 C-14,-13 -9,-32 0,-46 Z" transform="rotate(45 100 102) translate(100 56)" fill="#d4a7ab"/>
+    <path d="M0,-46 C9,-32 14,-13 14,0 C14,13 9,32 0,46 C-9,32 -14,13 -14,0 C-14,-13 -9,-32 0,-46 Z" transform="rotate(90 100 102) translate(100 56)" fill="#cba0a4"/>
+    <path d="M0,-46 C9,-32 14,-13 14,0 C14,13 9,32 0,46 C-9,32 -14,13 -14,0 C-14,-13 -9,-32 0,-46 Z" transform="rotate(135 100 102) translate(100 56)" fill="#dcc1c4"/>
+  </g>
+  <!-- مركز الزهرة -->
+  <circle cx="100" cy="102" r="13" fill="url(#ctr)"/>
+  <circle cx="100" cy="102" r="6.5" fill="#ffffff"/>
+</svg>
